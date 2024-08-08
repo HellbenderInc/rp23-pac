@@ -80,27 +80,27 @@ impl Cs {
     pub fn set_err_sticky(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 10usize)) | (((val as u32) & 0x01) << 10usize);
     }
-    #[doc = "Select analog mux input. Updated automatically in round-robin mode."]
+    #[doc = "Select analog mux input. Updated automatically in round-robin mode. This is corrected for the package option so only ADC channels which are bonded are available, and in the correct order"]
     #[inline(always)]
     pub const fn ainsel(&self) -> u8 {
-        let val = (self.0 >> 12usize) & 0x07;
+        let val = (self.0 >> 12usize) & 0x0f;
         val as u8
     }
-    #[doc = "Select analog mux input. Updated automatically in round-robin mode."]
+    #[doc = "Select analog mux input. Updated automatically in round-robin mode. This is corrected for the package option so only ADC channels which are bonded are available, and in the correct order"]
     #[inline(always)]
     pub fn set_ainsel(&mut self, val: u8) {
-        self.0 = (self.0 & !(0x07 << 12usize)) | (((val as u32) & 0x07) << 12usize);
+        self.0 = (self.0 & !(0x0f << 12usize)) | (((val as u32) & 0x0f) << 12usize);
     }
     #[doc = "Round-robin sampling. 1 bit per channel. Set all bits to 0 to disable. Otherwise, the ADC will cycle through each enabled channel in a round-robin fashion. The first channel to be sampled will be the one currently indicated by AINSEL. AINSEL will be updated after each conversion with the newly-selected channel."]
     #[inline(always)]
-    pub const fn rrobin(&self) -> u8 {
-        let val = (self.0 >> 16usize) & 0x1f;
-        val as u8
+    pub const fn rrobin(&self) -> u16 {
+        let val = (self.0 >> 16usize) & 0x01ff;
+        val as u16
     }
     #[doc = "Round-robin sampling. 1 bit per channel. Set all bits to 0 to disable. Otherwise, the ADC will cycle through each enabled channel in a round-robin fashion. The first channel to be sampled will be the one currently indicated by AINSEL. AINSEL will be updated after each conversion with the newly-selected channel."]
     #[inline(always)]
-    pub fn set_rrobin(&mut self, val: u8) {
-        self.0 = (self.0 & !(0x1f << 16usize)) | (((val as u32) & 0x1f) << 16usize);
+    pub fn set_rrobin(&mut self, val: u16) {
+        self.0 = (self.0 & !(0x01ff << 16usize)) | (((val as u32) & 0x01ff) << 16usize);
     }
 }
 impl Default for Cs {
@@ -293,7 +293,7 @@ impl Default for Fifo {
         Fifo(0)
     }
 }
-#[doc = "Interrupt Enable"]
+#[doc = "Raw Interrupts"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Int(pub u32);

@@ -33,5 +33,25 @@ impl Pll {
     pub const fn prim(self) -> crate::common::Reg<regs::Prim, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(12usize) as _) }
     }
+    #[doc = "Raw Interrupts"]
+    #[inline(always)]
+    pub const fn intr(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(16usize) as _) }
+    }
+    #[doc = "Interrupt Enable"]
+    #[inline(always)]
+    pub const fn inte(self) -> crate::common::Reg<regs::Inte, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(20usize) as _) }
+    }
+    #[doc = "Interrupt Force"]
+    #[inline(always)]
+    pub const fn intf(self) -> crate::common::Reg<regs::Intf, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(24usize) as _) }
+    }
+    #[doc = "Interrupt status after masking & forcing"]
+    #[inline(always)]
+    pub const fn ints(self) -> crate::common::Reg<regs::Ints, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(28usize) as _) }
+    }
 }
 pub mod regs;

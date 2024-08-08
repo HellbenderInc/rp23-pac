@@ -25,6 +25,17 @@ impl Cs {
     pub fn set_bypass(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 8usize)) | (((val as u32) & 0x01) << 8usize);
     }
+    #[doc = "PLL is not locked Ideally this is cleared when PLL lock is seen and this should never normally be set"]
+    #[inline(always)]
+    pub const fn lock_n(&self) -> bool {
+        let val = (self.0 >> 30usize) & 0x01;
+        val != 0
+    }
+    #[doc = "PLL is not locked Ideally this is cleared when PLL lock is seen and this should never normally be set"]
+    #[inline(always)]
+    pub fn set_lock_n(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 30usize)) | (((val as u32) & 0x01) << 30usize);
+    }
     #[doc = "PLL is locked"]
     #[inline(always)]
     pub const fn lock(&self) -> bool {
@@ -64,6 +75,90 @@ impl Default for FbdivInt {
     #[inline(always)]
     fn default() -> FbdivInt {
         FbdivInt(0)
+    }
+}
+#[doc = "Interrupt Enable"]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Inte(pub u32);
+impl Inte {
+    #[inline(always)]
+    pub const fn lock_n_sticky(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_lock_n_sticky(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Inte {
+    #[inline(always)]
+    fn default() -> Inte {
+        Inte(0)
+    }
+}
+#[doc = "Interrupt Force"]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Intf(pub u32);
+impl Intf {
+    #[inline(always)]
+    pub const fn lock_n_sticky(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_lock_n_sticky(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Intf {
+    #[inline(always)]
+    fn default() -> Intf {
+        Intf(0)
+    }
+}
+#[doc = "Raw Interrupts"]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Intr(pub u32);
+impl Intr {
+    #[inline(always)]
+    pub const fn lock_n_sticky(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_lock_n_sticky(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Intr {
+    #[inline(always)]
+    fn default() -> Intr {
+        Intr(0)
+    }
+}
+#[doc = "Interrupt status after masking & forcing"]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Ints(pub u32);
+impl Ints {
+    #[inline(always)]
+    pub const fn lock_n_sticky(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_lock_n_sticky(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Ints {
+    #[inline(always)]
+    fn default() -> Ints {
+        Ints(0)
     }
 }
 #[doc = "Controls the PLL post dividers for the primary output (note: this PLL does not have a secondary output) the primary output is driven from VCO divided by postdiv1*postdiv2"]

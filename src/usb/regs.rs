@@ -32,7 +32,7 @@ impl Default for AddrEndp {
         AddrEndp(0)
     }
 }
-#[doc = "Interrupt endpoint 10. Only valid for HOST mode."]
+#[doc = "Interrupt endpoint 9. Only valid for HOST mode."]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct AddrEndpX(pub u32);
@@ -164,6 +164,56 @@ impl Default for BuffStatus {
         BuffStatus(0)
     }
 }
+#[doc = "Watchdog that forces the device state machine to idle and raises an interrupt if the device stays in a state that isn't idle for the configured limit. The counter is reset on every state transition. Set limit while enable is low and then set the enable."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct DevSmWatchdog(pub u32);
+impl DevSmWatchdog {
+    #[inline(always)]
+    pub const fn limit(&self) -> u32 {
+        let val = (self.0 >> 0usize) & 0x0003_ffff;
+        val as u32
+    }
+    #[inline(always)]
+    pub fn set_limit(&mut self, val: u32) {
+        self.0 = (self.0 & !(0x0003_ffff << 0usize)) | (((val as u32) & 0x0003_ffff) << 0usize);
+    }
+    #[inline(always)]
+    pub const fn enable(&self) -> bool {
+        let val = (self.0 >> 18usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_enable(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 18usize)) | (((val as u32) & 0x01) << 18usize);
+    }
+    #[doc = "Set to 1 to forcibly reset the device state machine on watchdog expiry"]
+    #[inline(always)]
+    pub const fn reset(&self) -> bool {
+        let val = (self.0 >> 19usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Set to 1 to forcibly reset the device state machine on watchdog expiry"]
+    #[inline(always)]
+    pub fn set_reset(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 19usize)) | (((val as u32) & 0x01) << 19usize);
+    }
+    #[inline(always)]
+    pub const fn fired(&self) -> bool {
+        let val = (self.0 >> 20usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_fired(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 20usize)) | (((val as u32) & 0x01) << 20usize);
+    }
+}
+impl Default for DevSmWatchdog {
+    #[inline(always)]
+    fn default() -> DevSmWatchdog {
+        DevSmWatchdog(0)
+    }
+}
 #[doc = "Device only: Can be set to ignore the buffer control register for this endpoint in case you would like to revoke a buffer. A NAK will be sent for every access to the endpoint until this bit is cleared. A corresponding bit in `EP_ABORT_DONE` is set when it is safe to modify the buffer control register."]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -240,6 +290,306 @@ impl Default for EpAbortDone {
         EpAbortDone(0)
     }
 }
+#[doc = "RX error count for each endpoint. Write to each field to reset the counter to 0."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct EpRxError(pub u32);
+impl EpRxError {
+    #[inline(always)]
+    pub const fn ep0_transaction(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep0_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+    #[inline(always)]
+    pub const fn ep0_seq(&self) -> bool {
+        let val = (self.0 >> 1usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep0_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 1usize)) | (((val as u32) & 0x01) << 1usize);
+    }
+    #[inline(always)]
+    pub const fn ep1_transaction(&self) -> bool {
+        let val = (self.0 >> 2usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep1_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 2usize)) | (((val as u32) & 0x01) << 2usize);
+    }
+    #[inline(always)]
+    pub const fn ep1_seq(&self) -> bool {
+        let val = (self.0 >> 3usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep1_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 3usize)) | (((val as u32) & 0x01) << 3usize);
+    }
+    #[inline(always)]
+    pub const fn ep2_transaction(&self) -> bool {
+        let val = (self.0 >> 4usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep2_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 4usize)) | (((val as u32) & 0x01) << 4usize);
+    }
+    #[inline(always)]
+    pub const fn ep2_seq(&self) -> bool {
+        let val = (self.0 >> 5usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep2_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 5usize)) | (((val as u32) & 0x01) << 5usize);
+    }
+    #[inline(always)]
+    pub const fn ep3_transaction(&self) -> bool {
+        let val = (self.0 >> 6usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep3_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 6usize)) | (((val as u32) & 0x01) << 6usize);
+    }
+    #[inline(always)]
+    pub const fn ep3_seq(&self) -> bool {
+        let val = (self.0 >> 7usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep3_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 7usize)) | (((val as u32) & 0x01) << 7usize);
+    }
+    #[inline(always)]
+    pub const fn ep4_transaction(&self) -> bool {
+        let val = (self.0 >> 8usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep4_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 8usize)) | (((val as u32) & 0x01) << 8usize);
+    }
+    #[inline(always)]
+    pub const fn ep4_seq(&self) -> bool {
+        let val = (self.0 >> 9usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep4_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 9usize)) | (((val as u32) & 0x01) << 9usize);
+    }
+    #[inline(always)]
+    pub const fn ep5_transaction(&self) -> bool {
+        let val = (self.0 >> 10usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep5_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 10usize)) | (((val as u32) & 0x01) << 10usize);
+    }
+    #[inline(always)]
+    pub const fn ep5_seq(&self) -> bool {
+        let val = (self.0 >> 11usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep5_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 11usize)) | (((val as u32) & 0x01) << 11usize);
+    }
+    #[inline(always)]
+    pub const fn ep6_transaction(&self) -> bool {
+        let val = (self.0 >> 12usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep6_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 12usize)) | (((val as u32) & 0x01) << 12usize);
+    }
+    #[inline(always)]
+    pub const fn ep6_seq(&self) -> bool {
+        let val = (self.0 >> 13usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep6_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 13usize)) | (((val as u32) & 0x01) << 13usize);
+    }
+    #[inline(always)]
+    pub const fn ep7_transaction(&self) -> bool {
+        let val = (self.0 >> 14usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep7_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 14usize)) | (((val as u32) & 0x01) << 14usize);
+    }
+    #[inline(always)]
+    pub const fn ep7_seq(&self) -> bool {
+        let val = (self.0 >> 15usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep7_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 15usize)) | (((val as u32) & 0x01) << 15usize);
+    }
+    #[inline(always)]
+    pub const fn ep8_transaction(&self) -> bool {
+        let val = (self.0 >> 16usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep8_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 16usize)) | (((val as u32) & 0x01) << 16usize);
+    }
+    #[inline(always)]
+    pub const fn ep8_seq(&self) -> bool {
+        let val = (self.0 >> 17usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep8_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 17usize)) | (((val as u32) & 0x01) << 17usize);
+    }
+    #[inline(always)]
+    pub const fn ep9_transaction(&self) -> bool {
+        let val = (self.0 >> 18usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep9_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 18usize)) | (((val as u32) & 0x01) << 18usize);
+    }
+    #[inline(always)]
+    pub const fn ep9_seq(&self) -> bool {
+        let val = (self.0 >> 19usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep9_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 19usize)) | (((val as u32) & 0x01) << 19usize);
+    }
+    #[inline(always)]
+    pub const fn ep10_transaction(&self) -> bool {
+        let val = (self.0 >> 20usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep10_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 20usize)) | (((val as u32) & 0x01) << 20usize);
+    }
+    #[inline(always)]
+    pub const fn ep10_seq(&self) -> bool {
+        let val = (self.0 >> 21usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep10_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 21usize)) | (((val as u32) & 0x01) << 21usize);
+    }
+    #[inline(always)]
+    pub const fn ep11_transaction(&self) -> bool {
+        let val = (self.0 >> 22usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep11_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 22usize)) | (((val as u32) & 0x01) << 22usize);
+    }
+    #[inline(always)]
+    pub const fn ep11_seq(&self) -> bool {
+        let val = (self.0 >> 23usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep11_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 23usize)) | (((val as u32) & 0x01) << 23usize);
+    }
+    #[inline(always)]
+    pub const fn ep12_transaction(&self) -> bool {
+        let val = (self.0 >> 24usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep12_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 24usize)) | (((val as u32) & 0x01) << 24usize);
+    }
+    #[inline(always)]
+    pub const fn ep12_seq(&self) -> bool {
+        let val = (self.0 >> 25usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep12_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 25usize)) | (((val as u32) & 0x01) << 25usize);
+    }
+    #[inline(always)]
+    pub const fn ep13_transaction(&self) -> bool {
+        let val = (self.0 >> 26usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep13_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 26usize)) | (((val as u32) & 0x01) << 26usize);
+    }
+    #[inline(always)]
+    pub const fn ep13_seq(&self) -> bool {
+        let val = (self.0 >> 27usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep13_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 27usize)) | (((val as u32) & 0x01) << 27usize);
+    }
+    #[inline(always)]
+    pub const fn ep14_transaction(&self) -> bool {
+        let val = (self.0 >> 28usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep14_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 28usize)) | (((val as u32) & 0x01) << 28usize);
+    }
+    #[inline(always)]
+    pub const fn ep14_seq(&self) -> bool {
+        let val = (self.0 >> 29usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep14_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 29usize)) | (((val as u32) & 0x01) << 29usize);
+    }
+    #[inline(always)]
+    pub const fn ep15_transaction(&self) -> bool {
+        let val = (self.0 >> 30usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep15_transaction(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 30usize)) | (((val as u32) & 0x01) << 30usize);
+    }
+    #[inline(always)]
+    pub const fn ep15_seq(&self) -> bool {
+        let val = (self.0 >> 31usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_ep15_seq(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 31usize)) | (((val as u32) & 0x01) << 31usize);
+    }
+}
+impl Default for EpRxError {
+    #[inline(always)]
+    fn default() -> EpRxError {
+        EpRxError(0)
+    }
+}
 #[doc = "Device: this bit must be set in conjunction with the `STALL` bit in the buffer control register to send a STALL on EP0. The device controller clears these bits when a SETUP packet is received because the USB spec requires that a STALL condition is cleared when a SETUP packet is received."]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -308,7 +658,163 @@ impl Default for EpStatusStallNak {
         EpStatusStallNak(0)
     }
 }
-#[doc = "Interrupt Enable"]
+#[doc = "TX error count for each endpoint. Write to each field to reset the counter to 0."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct EpTxError(pub u32);
+impl EpTxError {
+    #[inline(always)]
+    pub const fn ep0(&self) -> u8 {
+        let val = (self.0 >> 0usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep0(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 0usize)) | (((val as u32) & 0x03) << 0usize);
+    }
+    #[inline(always)]
+    pub const fn ep1(&self) -> u8 {
+        let val = (self.0 >> 2usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep1(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 2usize)) | (((val as u32) & 0x03) << 2usize);
+    }
+    #[inline(always)]
+    pub const fn ep2(&self) -> u8 {
+        let val = (self.0 >> 4usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep2(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 4usize)) | (((val as u32) & 0x03) << 4usize);
+    }
+    #[inline(always)]
+    pub const fn ep3(&self) -> u8 {
+        let val = (self.0 >> 6usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep3(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 6usize)) | (((val as u32) & 0x03) << 6usize);
+    }
+    #[inline(always)]
+    pub const fn ep4(&self) -> u8 {
+        let val = (self.0 >> 8usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep4(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 8usize)) | (((val as u32) & 0x03) << 8usize);
+    }
+    #[inline(always)]
+    pub const fn ep5(&self) -> u8 {
+        let val = (self.0 >> 10usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep5(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 10usize)) | (((val as u32) & 0x03) << 10usize);
+    }
+    #[inline(always)]
+    pub const fn ep6(&self) -> u8 {
+        let val = (self.0 >> 12usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep6(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 12usize)) | (((val as u32) & 0x03) << 12usize);
+    }
+    #[inline(always)]
+    pub const fn ep7(&self) -> u8 {
+        let val = (self.0 >> 14usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep7(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 14usize)) | (((val as u32) & 0x03) << 14usize);
+    }
+    #[inline(always)]
+    pub const fn ep8(&self) -> u8 {
+        let val = (self.0 >> 16usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep8(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 16usize)) | (((val as u32) & 0x03) << 16usize);
+    }
+    #[inline(always)]
+    pub const fn ep9(&self) -> u8 {
+        let val = (self.0 >> 18usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep9(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 18usize)) | (((val as u32) & 0x03) << 18usize);
+    }
+    #[inline(always)]
+    pub const fn ep10(&self) -> u8 {
+        let val = (self.0 >> 20usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep10(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 20usize)) | (((val as u32) & 0x03) << 20usize);
+    }
+    #[inline(always)]
+    pub const fn ep11(&self) -> u8 {
+        let val = (self.0 >> 22usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep11(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 22usize)) | (((val as u32) & 0x03) << 22usize);
+    }
+    #[inline(always)]
+    pub const fn ep12(&self) -> u8 {
+        let val = (self.0 >> 24usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep12(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 24usize)) | (((val as u32) & 0x03) << 24usize);
+    }
+    #[inline(always)]
+    pub const fn ep13(&self) -> u8 {
+        let val = (self.0 >> 26usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep13(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 26usize)) | (((val as u32) & 0x03) << 26usize);
+    }
+    #[inline(always)]
+    pub const fn ep14(&self) -> u8 {
+        let val = (self.0 >> 28usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep14(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 28usize)) | (((val as u32) & 0x03) << 28usize);
+    }
+    #[inline(always)]
+    pub const fn ep15(&self) -> u8 {
+        let val = (self.0 >> 30usize) & 0x03;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_ep15(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x03 << 30usize)) | (((val as u32) & 0x03) << 30usize);
+    }
+}
+impl Default for EpTxError {
+    #[inline(always)]
+    fn default() -> EpTxError {
+        EpTxError(0)
+    }
+}
+#[doc = "Raw Interrupts"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Int(pub u32);
@@ -533,6 +1039,50 @@ impl Int {
     pub fn set_ep_stall_nak(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 19usize)) | (((val as u32) & 0x01) << 19usize);
     }
+    #[doc = "Source: SIE_STATUS.RX_SHORT_PACKET"]
+    #[inline(always)]
+    pub const fn rx_short_packet(&self) -> bool {
+        let val = (self.0 >> 20usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Source: SIE_STATUS.RX_SHORT_PACKET"]
+    #[inline(always)]
+    pub fn set_rx_short_packet(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 20usize)) | (((val as u32) & 0x01) << 20usize);
+    }
+    #[doc = "Source: SIE_STATUS.ENDPOINT_ERROR"]
+    #[inline(always)]
+    pub const fn endpoint_error(&self) -> bool {
+        let val = (self.0 >> 21usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Source: SIE_STATUS.ENDPOINT_ERROR"]
+    #[inline(always)]
+    pub fn set_endpoint_error(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 21usize)) | (((val as u32) & 0x01) << 21usize);
+    }
+    #[doc = "Source: DEV_SM_WATCHDOG.FIRED"]
+    #[inline(always)]
+    pub const fn dev_sm_watchdog_fired(&self) -> bool {
+        let val = (self.0 >> 22usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Source: DEV_SM_WATCHDOG.FIRED"]
+    #[inline(always)]
+    pub fn set_dev_sm_watchdog_fired(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 22usize)) | (((val as u32) & 0x01) << 22usize);
+    }
+    #[doc = "Source: NAK_POLL.EPX_STOPPED_ON_NAK"]
+    #[inline(always)]
+    pub const fn epx_stopped_on_nak(&self) -> bool {
+        let val = (self.0 >> 23usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Source: NAK_POLL.EPX_STOPPED_ON_NAK"]
+    #[inline(always)]
+    pub fn set_epx_stopped_on_nak(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 23usize)) | (((val as u32) & 0x01) << 23usize);
+    }
 }
 impl Default for Int {
     #[inline(always)]
@@ -563,6 +1113,115 @@ impl Default for IntEpCtrl {
         IntEpCtrl(0)
     }
 }
+#[doc = "Used for debug only."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct LinestateTuning(pub u32);
+impl LinestateTuning {
+    #[doc = "Device - register the received data to account for hub bit dribble before EOP. Only affects certain hubs."]
+    #[inline(always)]
+    pub const fn rcv_delay(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device - register the received data to account for hub bit dribble before EOP. Only affects certain hubs."]
+    #[inline(always)]
+    pub fn set_rcv_delay(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+    #[doc = "Device/Host - add an extra 1-bit debounce of linestate sampling."]
+    #[inline(always)]
+    pub const fn linestate_delay(&self) -> bool {
+        let val = (self.0 >> 1usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device/Host - add an extra 1-bit debounce of linestate sampling."]
+    #[inline(always)]
+    pub fn set_linestate_delay(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 1usize)) | (((val as u32) & 0x01) << 1usize);
+    }
+    #[doc = "Host - increase inter-packet and turnaround timeouts to accommodate worst-case hub delays."]
+    #[inline(always)]
+    pub const fn multi_hub_fix(&self) -> bool {
+        let val = (self.0 >> 2usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Host - increase inter-packet and turnaround timeouts to accommodate worst-case hub delays."]
+    #[inline(always)]
+    pub fn set_multi_hub_fix(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 2usize)) | (((val as u32) & 0x01) << 2usize);
+    }
+    #[doc = "Device - the controller FSM performs two reads of the buffer status memory address to avoid sampling metastable data. An enabled buffer is only used if both reads match."]
+    #[inline(always)]
+    pub const fn dev_buff_control_double_read_fix(&self) -> bool {
+        let val = (self.0 >> 3usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device - the controller FSM performs two reads of the buffer status memory address to avoid sampling metastable data. An enabled buffer is only used if both reads match."]
+    #[inline(always)]
+    pub fn set_dev_buff_control_double_read_fix(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 3usize)) | (((val as u32) & 0x01) << 3usize);
+    }
+    #[doc = "RX - when a bitstuff error is signalled by rx_dasm, unconditionally terminate RX decode to avoid a hang during certain packet phases."]
+    #[inline(always)]
+    pub const fn sie_rx_bitstuff_fix(&self) -> bool {
+        let val = (self.0 >> 4usize) & 0x01;
+        val != 0
+    }
+    #[doc = "RX - when a bitstuff error is signalled by rx_dasm, unconditionally terminate RX decode to avoid a hang during certain packet phases."]
+    #[inline(always)]
+    pub fn set_sie_rx_bitstuff_fix(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 4usize)) | (((val as u32) & 0x01) << 4usize);
+    }
+    #[doc = "RX - when recovering from line chatter or bitstuff errors, treat SE0 as the end of chatter as well as 8 consecutive idle bits."]
+    #[inline(always)]
+    pub const fn sie_rx_chatter_se0_fix(&self) -> bool {
+        let val = (self.0 >> 5usize) & 0x01;
+        val != 0
+    }
+    #[doc = "RX - when recovering from line chatter or bitstuff errors, treat SE0 as the end of chatter as well as 8 consecutive idle bits."]
+    #[inline(always)]
+    pub fn set_sie_rx_chatter_se0_fix(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 5usize)) | (((val as u32) & 0x01) << 5usize);
+    }
+    #[doc = "Device - suppress repeated errors until the device FSM is next in the process of decoding an inbound packet."]
+    #[inline(always)]
+    pub const fn dev_rx_err_quiesce(&self) -> bool {
+        let val = (self.0 >> 6usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device - suppress repeated errors until the device FSM is next in the process of decoding an inbound packet."]
+    #[inline(always)]
+    pub fn set_dev_rx_err_quiesce(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 6usize)) | (((val as u32) & 0x01) << 6usize);
+    }
+    #[doc = "Device - exit suspend on any non-idle signalling, not qualified with a 1ms timer"]
+    #[inline(always)]
+    pub const fn dev_ls_wake_fix(&self) -> bool {
+        let val = (self.0 >> 7usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device - exit suspend on any non-idle signalling, not qualified with a 1ms timer"]
+    #[inline(always)]
+    pub fn set_dev_ls_wake_fix(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 7usize)) | (((val as u32) & 0x01) << 7usize);
+    }
+    #[inline(always)]
+    pub const fn spare_fix(&self) -> u8 {
+        let val = (self.0 >> 8usize) & 0x0f;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_spare_fix(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x0f << 8usize)) | (((val as u32) & 0x0f) << 8usize);
+    }
+}
+impl Default for LinestateTuning {
+    #[inline(always)]
+    fn default() -> LinestateTuning {
+        LinestateTuning(0)
+    }
+}
 #[doc = "Main control register"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -589,6 +1248,17 @@ impl MainCtrl {
     #[inline(always)]
     pub fn set_host_ndevice(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 1usize)) | (((val as u32) & 0x01) << 1usize);
+    }
+    #[doc = "Isolates USB phy after controller power-up Remove isolation once software has configured the controller Not isolated = 0, Isolated = 1"]
+    #[inline(always)]
+    pub const fn phy_iso(&self) -> bool {
+        let val = (self.0 >> 2usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Isolates USB phy after controller power-up Remove isolation once software has configured the controller Not isolated = 0, Isolated = 1"]
+    #[inline(always)]
+    pub fn set_phy_iso(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 2usize)) | (((val as u32) & 0x01) << 2usize);
     }
     #[doc = "Reduced timings for simulation"]
     #[inline(always)]
@@ -624,6 +1294,17 @@ impl NakPoll {
     pub fn set_delay_ls(&mut self, val: u16) {
         self.0 = (self.0 & !(0x03ff << 0usize)) | (((val as u32) & 0x03ff) << 0usize);
     }
+    #[doc = "Bits 5:0 of nak_retry_count"]
+    #[inline(always)]
+    pub const fn retry_count_lo(&self) -> u8 {
+        let val = (self.0 >> 10usize) & 0x3f;
+        val as u8
+    }
+    #[doc = "Bits 5:0 of nak_retry_count"]
+    #[inline(always)]
+    pub fn set_retry_count_lo(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x3f << 10usize)) | (((val as u32) & 0x3f) << 10usize);
+    }
     #[doc = "NAK polling interval for a full speed device"]
     #[inline(always)]
     pub const fn delay_fs(&self) -> u16 {
@@ -634,6 +1315,39 @@ impl NakPoll {
     #[inline(always)]
     pub fn set_delay_fs(&mut self, val: u16) {
         self.0 = (self.0 & !(0x03ff << 16usize)) | (((val as u32) & 0x03ff) << 16usize);
+    }
+    #[doc = "Stop polling epx when a nak is received"]
+    #[inline(always)]
+    pub const fn stop_epx_on_nak(&self) -> bool {
+        let val = (self.0 >> 26usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Stop polling epx when a nak is received"]
+    #[inline(always)]
+    pub fn set_stop_epx_on_nak(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 26usize)) | (((val as u32) & 0x01) << 26usize);
+    }
+    #[doc = "EPX polling has stopped because a nak was received"]
+    #[inline(always)]
+    pub const fn epx_stopped_on_nak(&self) -> bool {
+        let val = (self.0 >> 27usize) & 0x01;
+        val != 0
+    }
+    #[doc = "EPX polling has stopped because a nak was received"]
+    #[inline(always)]
+    pub fn set_epx_stopped_on_nak(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 27usize)) | (((val as u32) & 0x01) << 27usize);
+    }
+    #[doc = "Bits 9:6 of nak_retry count"]
+    #[inline(always)]
+    pub const fn retry_count_hi(&self) -> u8 {
+        let val = (self.0 >> 28usize) & 0x0f;
+        val as u8
+    }
+    #[doc = "Bits 9:6 of nak_retry count"]
+    #[inline(always)]
+    pub fn set_retry_count_hi(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x0f << 28usize)) | (((val as u32) & 0x0f) << 28usize);
     }
 }
 impl Default for NakPoll {
@@ -823,6 +1537,17 @@ impl SieCtrl {
     pub fn set_transceiver_pd(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 18usize)) | (((val as u32) & 0x01) << 18usize);
     }
+    #[doc = "Device: Stop EP0 on a short packet."]
+    #[inline(always)]
+    pub const fn ep0_stop_on_short_packet(&self) -> bool {
+        let val = (self.0 >> 19usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device: Stop EP0 on a short packet."]
+    #[inline(always)]
+    pub fn set_ep0_stop_on_short_packet(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 19usize)) | (((val as u32) & 0x01) << 19usize);
+    }
     #[doc = "Direct control of DM"]
     #[inline(always)]
     pub const fn direct_dm(&self) -> bool {
@@ -945,13 +1670,13 @@ impl SieStatus {
     pub fn set_line_state(&mut self, val: u8) {
         self.0 = (self.0 & !(0x03 << 2usize)) | (((val as u32) & 0x03) << 2usize);
     }
-    #[doc = "Bus in suspended state. Valid for device and host. Host and device will go into suspend if neither Keep Alive / SOF frames are enabled."]
+    #[doc = "Bus in suspended state. Valid for device. Device will go into suspend if neither Keep Alive / SOF frames are enabled."]
     #[inline(always)]
     pub const fn suspended(&self) -> bool {
         let val = (self.0 >> 4usize) & 0x01;
         val != 0
     }
-    #[doc = "Bus in suspended state. Valid for device and host. Host and device will go into suspend if neither Keep Alive / SOF frames are enabled."]
+    #[doc = "Bus in suspended state. Valid for device. Device will go into suspend if neither Keep Alive / SOF frames are enabled."]
     #[inline(always)]
     pub fn set_suspended(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 4usize)) | (((val as u32) & 0x01) << 4usize);
@@ -988,6 +1713,17 @@ impl SieStatus {
     #[inline(always)]
     pub fn set_resume(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 11usize)) | (((val as u32) & 0x01) << 11usize);
+    }
+    #[doc = "Device or Host has received a short packet. This is when the data received is less than configured in the buffer control register. Device: If using double buffered mode on device the buffer select will not be toggled after writing status back to the buffer control register. This is to prevent any further transactions on that endpoint until the user has reset the buffer control registers. Host: the current transfer will be stopped early."]
+    #[inline(always)]
+    pub const fn rx_short_packet(&self) -> bool {
+        let val = (self.0 >> 12usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Device or Host has received a short packet. This is when the data received is less than configured in the buffer control register. Device: If using double buffered mode on device the buffer select will not be toggled after writing status back to the buffer control register. This is to prevent any further transactions on that endpoint until the user has reset the buffer control registers. Host: the current transfer will be stopped early."]
+    #[inline(always)]
+    pub fn set_rx_short_packet(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 12usize)) | (((val as u32) & 0x01) << 12usize);
     }
     #[doc = "Device: connected"]
     #[inline(always)]
@@ -1032,6 +1768,17 @@ impl SieStatus {
     #[inline(always)]
     pub fn set_bus_reset(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 19usize)) | (((val as u32) & 0x01) << 19usize);
+    }
+    #[doc = "An endpoint has encountered an error. Read the ep_rx_error and ep_tx_error registers to find out which endpoint had an error."]
+    #[inline(always)]
+    pub const fn endpoint_error(&self) -> bool {
+        let val = (self.0 >> 23usize) & 0x01;
+        val != 0
+    }
+    #[doc = "An endpoint has encountered an error. Read the ep_rx_error and ep_tx_error registers to find out which endpoint had an error."]
+    #[inline(always)]
+    pub fn set_endpoint_error(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 23usize)) | (((val as u32) & 0x01) << 23usize);
     }
     #[doc = "CRC Error. Raised by the Serial RX engine."]
     #[inline(always)]
@@ -1128,6 +1875,44 @@ impl Default for SieStatus {
         SieStatus(0)
     }
 }
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct SmState(pub u32);
+impl SmState {
+    #[inline(always)]
+    pub const fn state(&self) -> u8 {
+        let val = (self.0 >> 0usize) & 0x1f;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_state(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x1f << 0usize)) | (((val as u32) & 0x1f) << 0usize);
+    }
+    #[inline(always)]
+    pub const fn bc_state(&self) -> u8 {
+        let val = (self.0 >> 5usize) & 0x07;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_bc_state(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x07 << 5usize)) | (((val as u32) & 0x07) << 5usize);
+    }
+    #[inline(always)]
+    pub const fn rx_dasm(&self) -> u8 {
+        let val = (self.0 >> 8usize) & 0x0f;
+        val as u8
+    }
+    #[inline(always)]
+    pub fn set_rx_dasm(&mut self, val: u8) {
+        self.0 = (self.0 & !(0x0f << 8usize)) | (((val as u32) & 0x0f) << 8usize);
+    }
+}
+impl Default for SmState {
+    #[inline(always)]
+    fn default() -> SmState {
+        SmState(0)
+    }
+}
 #[doc = "Read the last SOF (Start of Frame) frame number seen. In device mode the last SOF received from the host. In host mode the last SOF sent by the host."]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -1147,6 +1932,48 @@ impl Default for SofRd {
     #[inline(always)]
     fn default() -> SofRd {
         SofRd(0)
+    }
+}
+#[doc = "Device only. Value of free-running PHY clock counter @48MHz when last SOF event occurred."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct SofTimestampLast(pub u32);
+impl SofTimestampLast {
+    #[inline(always)]
+    pub const fn sof_timestamp_last(&self) -> u32 {
+        let val = (self.0 >> 0usize) & 0x001f_ffff;
+        val as u32
+    }
+    #[inline(always)]
+    pub fn set_sof_timestamp_last(&mut self, val: u32) {
+        self.0 = (self.0 & !(0x001f_ffff << 0usize)) | (((val as u32) & 0x001f_ffff) << 0usize);
+    }
+}
+impl Default for SofTimestampLast {
+    #[inline(always)]
+    fn default() -> SofTimestampLast {
+        SofTimestampLast(0)
+    }
+}
+#[doc = "Device only. Raw value of free-running PHY clock counter @48MHz. Used to calculate time between SOF events."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct SofTimestampRaw(pub u32);
+impl SofTimestampRaw {
+    #[inline(always)]
+    pub const fn sof_timestamp_raw(&self) -> u32 {
+        let val = (self.0 >> 0usize) & 0x001f_ffff;
+        val as u32
+    }
+    #[inline(always)]
+    pub fn set_sof_timestamp_raw(&mut self, val: u32) {
+        self.0 = (self.0 & !(0x001f_ffff << 0usize)) | (((val as u32) & 0x001f_ffff) << 0usize);
+    }
+}
+impl Default for SofTimestampRaw {
+    #[inline(always)]
+    fn default() -> SofTimestampRaw {
+        SofTimestampRaw(0)
     }
 }
 #[doc = "Set the SOF (Start of Frame) frame number in the host controller. The SOF packet is sent every 1ms and the host will increment the frame number by 1 each time."]
@@ -1210,6 +2037,28 @@ impl UsbMuxing {
     #[inline(always)]
     pub fn set_softcon(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 3usize)) | (((val as u32) & 0x01) << 3usize);
+    }
+    #[doc = "Use the usb DP and DM pins as GPIO pins instead of connecting them to the USB controller."]
+    #[inline(always)]
+    pub const fn usbphy_as_gpio(&self) -> bool {
+        let val = (self.0 >> 4usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Use the usb DP and DM pins as GPIO pins instead of connecting them to the USB controller."]
+    #[inline(always)]
+    pub fn set_usbphy_as_gpio(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 4usize)) | (((val as u32) & 0x01) << 4usize);
+    }
+    #[doc = "Swap the USB PHY DP and DM pins and all related controls and flip receive differential data. Can be used to switch USB DP/DP on the PCB. This is done at a low level so overrides all other controls."]
+    #[inline(always)]
+    pub const fn swap_dpdm(&self) -> bool {
+        let val = (self.0 >> 31usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Swap the USB PHY DP and DM pins and all related controls and flip receive differential data. Can be used to switch USB DP/DP on the PCB. This is done at a low level so overrides all other controls."]
+    #[inline(always)]
+    pub fn set_swap_dpdm(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 31usize)) | (((val as u32) & 0x01) << 31usize);
     }
 }
 impl Default for UsbMuxing {
@@ -1520,6 +2369,39 @@ impl UsbphyDirect {
     pub fn set_dm_ovv(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 22usize)) | (((val as u32) & 0x01) << 22usize);
     }
+    #[doc = "Override rx_dd value into controller"]
+    #[inline(always)]
+    pub const fn rx_dd_override(&self) -> bool {
+        let val = (self.0 >> 23usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Override rx_dd value into controller"]
+    #[inline(always)]
+    pub fn set_rx_dd_override(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 23usize)) | (((val as u32) & 0x01) << 23usize);
+    }
+    #[doc = "Override rx_dp value into controller"]
+    #[inline(always)]
+    pub const fn rx_dp_override(&self) -> bool {
+        let val = (self.0 >> 24usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Override rx_dp value into controller"]
+    #[inline(always)]
+    pub fn set_rx_dp_override(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 24usize)) | (((val as u32) & 0x01) << 24usize);
+    }
+    #[doc = "Override rx_dm value into controller"]
+    #[inline(always)]
+    pub const fn rx_dm_override(&self) -> bool {
+        let val = (self.0 >> 25usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Override rx_dm value into controller"]
+    #[inline(always)]
+    pub fn set_rx_dm_override(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 25usize)) | (((val as u32) & 0x01) << 25usize);
+    }
 }
 impl Default for UsbphyDirect {
     #[inline(always)]
@@ -1657,6 +2539,33 @@ impl UsbphyDirectOverride {
     #[inline(always)]
     pub fn set_tx_diffmode_override_en(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 15usize)) | (((val as u32) & 0x01) << 15usize);
+    }
+    #[inline(always)]
+    pub const fn rx_dd_override_en(&self) -> bool {
+        let val = (self.0 >> 16usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_rx_dd_override_en(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 16usize)) | (((val as u32) & 0x01) << 16usize);
+    }
+    #[inline(always)]
+    pub const fn rx_dp_override_en(&self) -> bool {
+        let val = (self.0 >> 17usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_rx_dp_override_en(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 17usize)) | (((val as u32) & 0x01) << 17usize);
+    }
+    #[inline(always)]
+    pub const fn rx_dm_override_en(&self) -> bool {
+        let val = (self.0 >> 18usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_rx_dm_override_en(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 18usize)) | (((val as u32) & 0x01) << 18usize);
     }
 }
 impl Default for UsbphyDirectOverride {

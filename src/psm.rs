@@ -23,12 +23,12 @@ impl Psm {
     pub const fn frce_off(self) -> crate::common::Reg<regs::FrceOff, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(4usize) as _) }
     }
-    #[doc = "Set to 1 if this peripheral should be reset when the watchdog fires."]
+    #[doc = "Set to 1 if the watchdog should reset this"]
     #[inline(always)]
     pub const fn wdsel(self) -> crate::common::Reg<regs::Wdsel, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(8usize) as _) }
     }
-    #[doc = "Indicates the peripheral's registers are ready to access."]
+    #[doc = "Is the subsystem ready?"]
     #[inline(always)]
     pub const fn done(self) -> crate::common::Reg<regs::Done, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(12usize) as _) }

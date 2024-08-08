@@ -53,7 +53,7 @@ impl Default for Dbgpause {
         Dbgpause(0)
     }
 }
-#[doc = "Interrupt Enable"]
+#[doc = "Interrupt Force"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Int(pub u32);
@@ -78,6 +78,27 @@ impl Default for Int {
         Int(0)
     }
 }
+#[doc = "Set locked bit to disable write access to timer Once set, cannot be cleared (without a reset)"]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Locked(pub u32);
+impl Locked {
+    #[inline(always)]
+    pub const fn locked(&self) -> bool {
+        let val = (self.0 >> 0usize) & 0x01;
+        val != 0
+    }
+    #[inline(always)]
+    pub fn set_locked(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Locked {
+    #[inline(always)]
+    fn default() -> Locked {
+        Locked(0)
+    }
+}
 #[doc = "Set high to pause the timer"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
@@ -97,5 +118,26 @@ impl Default for Pause {
     #[inline(always)]
     fn default() -> Pause {
         Pause(0)
+    }
+}
+#[doc = "Selects the source for the timer. Defaults to the normal tick configured in the ticks block (typically configured to 1 microsecond). Writing to 1 will ignore the tick and count clk_sys cycles instead."]
+#[repr(transparent)]
+#[derive(Copy, Clone, Eq, PartialEq)]
+pub struct Source(pub u32);
+impl Source {
+    #[inline(always)]
+    pub const fn clk_sys(&self) -> super::vals::ClkSys {
+        let val = (self.0 >> 0usize) & 0x01;
+        super::vals::ClkSys::from_bits(val as u8)
+    }
+    #[inline(always)]
+    pub fn set_clk_sys(&mut self, val: super::vals::ClkSys) {
+        self.0 = (self.0 & !(0x01 << 0usize)) | (((val.to_bits() as u32) & 0x01) << 0usize);
+    }
+}
+impl Default for Source {
+    #[inline(always)]
+    fn default() -> Source {
+        Source(0)
     }
 }

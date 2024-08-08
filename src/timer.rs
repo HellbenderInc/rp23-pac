@@ -1,4 +1,4 @@
-#[doc = "Controls time and alarms time is a 64 bit value indicating the time in usec since power-on timeh is the top 32 bits of time & timel is the bottom 32 bits to change time write to timelw before timehw to read time read from timelr before timehr An alarm is set by setting alarm_enable and writing to the corresponding alarm register When an alarm is pending, the corresponding alarm_running signal will be high An alarm can be cancelled before it has finished by clearing the alarm_enable When an alarm fires, the corresponding alarm_irq is set and alarm_running is cleared To clear the interrupt write a 1 to the corresponding alarm_irq"]
+#[doc = "Controls time and alarms time is a 64 bit value indicating the time since power-on timeh is the top 32 bits of time & timel is the bottom 32 bits to change time write to timelw before timehw to read time read from timelr before timehr An alarm is set by setting alarm_enable and writing to the corresponding alarm register When an alarm is pending, the corresponding alarm_running signal will be high An alarm can be cancelled before it has finished by clearing the alarm_enable When an alarm fires, the corresponding alarm_irq is set and alarm_running is cleared To clear the interrupt write a 1 to the corresponding alarm_irq The timer can be locked to prevent writing"]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Timer {
     ptr: *mut u8,
@@ -16,22 +16,22 @@ impl Timer {
     }
     #[doc = "Write to bits 63:32 of time always write timelw before timehw"]
     #[inline(always)]
-    pub const fn timehw(self) -> crate::common::Reg<u32, crate::common::W> {
+    pub const fn timehw(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(0usize) as _) }
     }
     #[doc = "Write to bits 31:0 of time writes do not get copied to time until timehw is written"]
     #[inline(always)]
-    pub const fn timelw(self) -> crate::common::Reg<u32, crate::common::W> {
+    pub const fn timelw(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(4usize) as _) }
     }
     #[doc = "Read from bits 63:32 of time always read timelr before timehr"]
     #[inline(always)]
-    pub const fn timehr(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn timehr(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(8usize) as _) }
     }
     #[doc = "Read from bits 31:0 of time"]
     #[inline(always)]
-    pub const fn timelr(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn timelr(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(12usize) as _) }
     }
     #[doc = "Arm alarm 0, and configure the time it will fire. Once armed, the alarm fires when TIMER_ALARM0 == TIMELR. The alarm will disarm itself once it fires, and can be disarmed early using the ARMED status register."]
@@ -47,12 +47,12 @@ impl Timer {
     }
     #[doc = "Raw read from bits 63:32 of time (no side effects)"]
     #[inline(always)]
-    pub const fn timerawh(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn timerawh(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(36usize) as _) }
     }
     #[doc = "Raw read from bits 31:0 of time (no side effects)"]
     #[inline(always)]
-    pub const fn timerawl(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn timerawl(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(40usize) as _) }
     }
     #[doc = "Set bits high to enable pause when the corresponding debug ports are active"]
@@ -65,25 +65,36 @@ impl Timer {
     pub const fn pause(self) -> crate::common::Reg<regs::Pause, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(48usize) as _) }
     }
+    #[doc = "Set locked bit to disable write access to timer Once set, cannot be cleared (without a reset)"]
+    #[inline(always)]
+    pub const fn locked(self) -> crate::common::Reg<regs::Locked, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(52usize) as _) }
+    }
+    #[doc = "Selects the source for the timer. Defaults to the normal tick configured in the ticks block (typically configured to 1 microsecond). Writing to 1 will ignore the tick and count clk_sys cycles instead."]
+    #[inline(always)]
+    pub const fn source(self) -> crate::common::Reg<regs::Source, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(56usize) as _) }
+    }
     #[doc = "Raw Interrupts"]
     #[inline(always)]
     pub const fn intr(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(52usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(60usize) as _) }
     }
     #[doc = "Interrupt Enable"]
     #[inline(always)]
     pub const fn inte(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(56usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(64usize) as _) }
     }
     #[doc = "Interrupt Force"]
     #[inline(always)]
     pub const fn intf(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(60usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(68usize) as _) }
     }
     #[doc = "Interrupt status after masking & forcing"]
     #[inline(always)]
     pub const fn ints(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(64usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(72usize) as _) }
     }
 }
 pub mod regs;
+pub mod vals;

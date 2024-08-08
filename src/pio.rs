@@ -13,17 +13,17 @@ impl Irq {
     pub const fn as_ptr(&self) -> *mut () {
         self.ptr as _
     }
-    #[doc = "Interrupt Enable for irq0"]
+    #[doc = "Interrupt Enable for irq1"]
     #[inline(always)]
     pub const fn inte(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(0usize) as _) }
     }
-    #[doc = "Interrupt Force for irq0"]
+    #[doc = "Interrupt Force for irq1"]
     #[inline(always)]
     pub const fn intf(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(4usize) as _) }
     }
-    #[doc = "Interrupt status after masking & forcing for irq0"]
+    #[doc = "Interrupt status after masking & forcing for irq1"]
     #[inline(always)]
     pub const fn ints(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(8usize) as _) }
@@ -67,17 +67,17 @@ impl Pio {
     }
     #[doc = "Direct write access to the TX FIFO for this state machine. Each write pushes one word to the FIFO. Attempting to write to a full FIFO has no effect on the FIFO state or contents, and sets the sticky FDEBUG_TXOVER error flag for this FIFO."]
     #[inline(always)]
-    pub const fn txf(self, n: usize) -> crate::common::Reg<u32, crate::common::W> {
+    pub const fn txf(self, n: usize) -> crate::common::Reg<u32, crate::common::RW> {
         assert!(n < 4usize);
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(16usize + n * 4usize) as _) }
     }
     #[doc = "Direct read access to the RX FIFO for this state machine. Each read pops one word from the FIFO. Attempting to read from an empty FIFO has no effect on the FIFO state, and sets the sticky FDEBUG_RXUNDER error flag for this FIFO. The data returned to the system on a read from an empty FIFO is undefined."]
     #[inline(always)]
-    pub const fn rxf(self, n: usize) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn rxf(self, n: usize) -> crate::common::Reg<u32, crate::common::RW> {
         assert!(n < 4usize);
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(32usize + n * 4usize) as _) }
     }
-    #[doc = "State machine IRQ flags register. Write 1 to clear. There are 8 state machine IRQ flags, which can be set, cleared, and waited on by the state machines. There's no fixed association between flags and state machines -- any state machine can use any flag. Any of the 8 flags can be used for timing synchronisation between state machines, using IRQ and WAIT instructions. The lower four of these flags are also routed out to system-level interrupt requests, alongside FIFO status interrupts -- see e.g. IRQ0_INTE."]
+    #[doc = "State machine IRQ flags register. Write 1 to clear. There are eight state machine IRQ flags, which can be set, cleared, and waited on by the state machines. There's no fixed association between flags and state machines -- any state machine can use any flag. Any of the eight flags can be used for timing synchronisation between state machines, using IRQ and WAIT instructions. Any combination of the eight flags can also routed out to either of the two system-level interrupt requests, alongside FIFO status interrupts -- see e.g. IRQ0_INTE."]
     #[inline(always)]
     pub const fn irq(self) -> crate::common::Reg<regs::Irq, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(48usize) as _) }
@@ -94,12 +94,12 @@ impl Pio {
     }
     #[doc = "Read to sample the pad output values PIO is currently driving to the GPIOs. On RP2040 there are 30 GPIOs, so the two most significant bits are hardwired to 0."]
     #[inline(always)]
-    pub const fn dbg_padout(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn dbg_padout(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(60usize) as _) }
     }
     #[doc = "Read to sample the pad output enables (direction) PIO is currently driving to the GPIOs. On RP2040 there are 30 GPIOs, so the two most significant bits are hardwired to 0."]
     #[inline(always)]
-    pub const fn dbg_padoe(self) -> crate::common::Reg<u32, crate::common::R> {
+    pub const fn dbg_padoe(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(64usize) as _) }
     }
     #[doc = "The PIO hardware has some free parameters that may vary between chip products. These should be provided in the chip datasheet, but are also exposed here."]
@@ -121,15 +121,100 @@ impl Pio {
         assert!(n < 4usize);
         unsafe { StateMachine::from_ptr(self.ptr.add(200usize + n * 24usize) as _) }
     }
+    #[doc = "Direct read/write access to entry 0 of SM0's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf0_putget0(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(296usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 1 of SM0's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf0_putget1(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(300usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 2 of SM0's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf0_putget2(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(304usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 3 of SM0's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf0_putget3(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(308usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 0 of SM1's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf1_putget0(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(312usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 1 of SM1's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf1_putget1(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(316usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 2 of SM1's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf1_putget2(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(320usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 3 of SM1's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf1_putget3(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(324usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 0 of SM2's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf2_putget0(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(328usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 1 of SM2's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf2_putget1(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(332usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 2 of SM2's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf2_putget2(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(336usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 3 of SM2's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf2_putget3(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(340usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 0 of SM3's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf3_putget0(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(344usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 1 of SM3's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf3_putget1(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(348usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 2 of SM3's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf3_putget2(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(352usize) as _) }
+    }
+    #[doc = "Direct read/write access to entry 3 of SM3's RX FIFO, if SHIFTCTRL_FJOIN_RX_PUT xor SHIFTCTRL_FJOIN_RX_GET is set."]
+    #[inline(always)]
+    pub const fn rxf3_putget3(self) -> crate::common::Reg<u32, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(356usize) as _) }
+    }
+    #[doc = "Relocate GPIO 0 (from PIO's point of view) in the system GPIO numbering, to access more than 32 GPIOs from PIO. Only the values 0 and 16 are supported (only bit 4 is writable)."]
+    #[inline(always)]
+    pub const fn gpiobase(self) -> crate::common::Reg<regs::Gpiobase, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(360usize) as _) }
+    }
     #[doc = "Raw Interrupts"]
     #[inline(always)]
     pub const fn intr(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(296usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(364usize) as _) }
     }
     #[inline(always)]
     pub const fn irqs(self, n: usize) -> Irq {
         assert!(n < 2usize);
-        unsafe { Irq::from_ptr(self.ptr.add(300usize + n * 12usize) as _) }
+        unsafe { Irq::from_ptr(self.ptr.add(368usize + n * 12usize) as _) }
     }
 }
 #[derive(Copy, Clone, Eq, PartialEq)]

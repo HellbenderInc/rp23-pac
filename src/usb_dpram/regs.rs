@@ -3,7 +3,7 @@
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct EpBufferControl(pub u32);
 impl EpBufferControl {
-    #[doc = "The length of the data in buffer 0."]
+    #[doc = "The length of the data in buffer 1."]
     #[inline(always)]
     pub const fn length(&self, n: usize) -> u16 {
         assert!(n < 2usize);
@@ -11,7 +11,7 @@ impl EpBufferControl {
         let val = (self.0 >> offs) & 0x03ff;
         val as u16
     }
-    #[doc = "The length of the data in buffer 0."]
+    #[doc = "The length of the data in buffer 1."]
     #[inline(always)]
     pub fn set_length(&mut self, n: usize, val: u16) {
         assert!(n < 2usize);

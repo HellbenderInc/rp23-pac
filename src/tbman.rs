@@ -1,4 +1,4 @@
-#[doc = "Testbench manager. Allows the programmer to know what platform their software is running on."]
+#[doc = "For managing simulation testbenches"]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Tbman {
     ptr: *mut u8,

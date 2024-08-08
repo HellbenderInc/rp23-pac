@@ -39,17 +39,17 @@ pub enum ClkGpoutCtrlAuxsrc {
     CLKSRC_GPIN0 = 0x01,
     CLKSRC_GPIN1 = 0x02,
     CLKSRC_PLL_USB = 0x03,
-    ROSC_CLKSRC = 0x04,
-    XOSC_CLKSRC = 0x05,
-    CLK_SYS = 0x06,
-    CLK_USB = 0x07,
-    CLK_ADC = 0x08,
-    CLK_RTC = 0x09,
-    CLK_REF = 0x0a,
-    _RESERVED_b = 0x0b,
-    _RESERVED_c = 0x0c,
-    _RESERVED_d = 0x0d,
-    _RESERVED_e = 0x0e,
+    CLKSRC_PLL_USB_PRIMARY_REF_OPCG = 0x04,
+    ROSC_CLKSRC = 0x05,
+    XOSC_CLKSRC = 0x06,
+    LPOSC_CLKSRC = 0x07,
+    CLK_SYS = 0x08,
+    CLK_USB = 0x09,
+    CLK_ADC = 0x0a,
+    CLK_REF = 0x0b,
+    CLK_PERI = 0x0c,
+    CLK_HSTX = 0x0d,
+    OTP_CLK2FC = 0x0e,
     _RESERVED_f = 0x0f,
 }
 impl ClkGpoutCtrlAuxsrc {
@@ -72,6 +72,40 @@ impl From<ClkGpoutCtrlAuxsrc> for u8 {
     #[inline(always)]
     fn from(val: ClkGpoutCtrlAuxsrc) -> u8 {
         ClkGpoutCtrlAuxsrc::to_bits(val)
+    }
+}
+#[repr(u8)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub enum ClkHstxCtrlAuxsrc {
+    CLK_SYS = 0,
+    CLKSRC_PLL_SYS = 0x01,
+    CLKSRC_PLL_USB = 0x02,
+    CLKSRC_GPIN0 = 0x03,
+    CLKSRC_GPIN1 = 0x04,
+    _RESERVED_5 = 0x05,
+    _RESERVED_6 = 0x06,
+    _RESERVED_7 = 0x07,
+}
+impl ClkHstxCtrlAuxsrc {
+    #[inline(always)]
+    pub const fn from_bits(val: u8) -> ClkHstxCtrlAuxsrc {
+        unsafe { core::mem::transmute(val & 0x07) }
+    }
+    #[inline(always)]
+    pub const fn to_bits(self) -> u8 {
+        unsafe { core::mem::transmute(self) }
+    }
+}
+impl From<u8> for ClkHstxCtrlAuxsrc {
+    #[inline(always)]
+    fn from(val: u8) -> ClkHstxCtrlAuxsrc {
+        ClkHstxCtrlAuxsrc::from_bits(val)
+    }
+}
+impl From<ClkHstxCtrlAuxsrc> for u8 {
+    #[inline(always)]
+    fn from(val: ClkHstxCtrlAuxsrc) -> u8 {
+        ClkHstxCtrlAuxsrc::to_bits(val)
     }
 }
 #[repr(u8)]
@@ -114,7 +148,7 @@ pub enum ClkRefCtrlAuxsrc {
     CLKSRC_PLL_USB = 0,
     CLKSRC_GPIN0 = 0x01,
     CLKSRC_GPIN1 = 0x02,
-    _RESERVED_3 = 0x03,
+    CLKSRC_PLL_USB_PRIMARY_REF_OPCG = 0x03,
 }
 impl ClkRefCtrlAuxsrc {
     #[inline(always)]
@@ -144,7 +178,7 @@ pub enum ClkRefCtrlSrc {
     ROSC_CLKSRC_PH = 0,
     CLKSRC_CLK_REF_AUX = 0x01,
     XOSC_CLKSRC = 0x02,
-    _RESERVED_3 = 0x03,
+    LPOSC_CLKSRC = 0x03,
 }
 impl ClkRefCtrlSrc {
     #[inline(always)]
@@ -166,40 +200,6 @@ impl From<ClkRefCtrlSrc> for u8 {
     #[inline(always)]
     fn from(val: ClkRefCtrlSrc) -> u8 {
         ClkRefCtrlSrc::to_bits(val)
-    }
-}
-#[repr(u8)]
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
-pub enum ClkRtcCtrlAuxsrc {
-    CLKSRC_PLL_USB = 0,
-    CLKSRC_PLL_SYS = 0x01,
-    ROSC_CLKSRC_PH = 0x02,
-    XOSC_CLKSRC = 0x03,
-    CLKSRC_GPIN0 = 0x04,
-    CLKSRC_GPIN1 = 0x05,
-    _RESERVED_6 = 0x06,
-    _RESERVED_7 = 0x07,
-}
-impl ClkRtcCtrlAuxsrc {
-    #[inline(always)]
-    pub const fn from_bits(val: u8) -> ClkRtcCtrlAuxsrc {
-        unsafe { core::mem::transmute(val & 0x07) }
-    }
-    #[inline(always)]
-    pub const fn to_bits(self) -> u8 {
-        unsafe { core::mem::transmute(self) }
-    }
-}
-impl From<u8> for ClkRtcCtrlAuxsrc {
-    #[inline(always)]
-    fn from(val: u8) -> ClkRtcCtrlAuxsrc {
-        ClkRtcCtrlAuxsrc::from_bits(val)
-    }
-}
-impl From<ClkRtcCtrlAuxsrc> for u8 {
-    #[inline(always)]
-    fn from(val: ClkRtcCtrlAuxsrc) -> u8 {
-        ClkRtcCtrlAuxsrc::to_bits(val)
     }
 }
 #[repr(u8)]
@@ -300,6 +300,96 @@ impl From<ClkUsbCtrlAuxsrc> for u8 {
 }
 #[repr(u8)]
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub enum DftclkLposcCtrlSrc {
+    NULL = 0,
+    CLKSRC_PLL_USB_PRIMARY_LPOSC = 0x01,
+    CLKSRC_GPIN1 = 0x02,
+    _RESERVED_3 = 0x03,
+}
+impl DftclkLposcCtrlSrc {
+    #[inline(always)]
+    pub const fn from_bits(val: u8) -> DftclkLposcCtrlSrc {
+        unsafe { core::mem::transmute(val & 0x03) }
+    }
+    #[inline(always)]
+    pub const fn to_bits(self) -> u8 {
+        unsafe { core::mem::transmute(self) }
+    }
+}
+impl From<u8> for DftclkLposcCtrlSrc {
+    #[inline(always)]
+    fn from(val: u8) -> DftclkLposcCtrlSrc {
+        DftclkLposcCtrlSrc::from_bits(val)
+    }
+}
+impl From<DftclkLposcCtrlSrc> for u8 {
+    #[inline(always)]
+    fn from(val: DftclkLposcCtrlSrc) -> u8 {
+        DftclkLposcCtrlSrc::to_bits(val)
+    }
+}
+#[repr(u8)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub enum DftclkRoscCtrlSrc {
+    NULL = 0,
+    CLKSRC_PLL_SYS_PRIMARY_ROSC = 0x01,
+    CLKSRC_GPIN1 = 0x02,
+    _RESERVED_3 = 0x03,
+}
+impl DftclkRoscCtrlSrc {
+    #[inline(always)]
+    pub const fn from_bits(val: u8) -> DftclkRoscCtrlSrc {
+        unsafe { core::mem::transmute(val & 0x03) }
+    }
+    #[inline(always)]
+    pub const fn to_bits(self) -> u8 {
+        unsafe { core::mem::transmute(self) }
+    }
+}
+impl From<u8> for DftclkRoscCtrlSrc {
+    #[inline(always)]
+    fn from(val: u8) -> DftclkRoscCtrlSrc {
+        DftclkRoscCtrlSrc::from_bits(val)
+    }
+}
+impl From<DftclkRoscCtrlSrc> for u8 {
+    #[inline(always)]
+    fn from(val: DftclkRoscCtrlSrc) -> u8 {
+        DftclkRoscCtrlSrc::to_bits(val)
+    }
+}
+#[repr(u8)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
+pub enum DftclkXoscCtrlSrc {
+    NULL = 0,
+    CLKSRC_PLL_USB_PRIMARY = 0x01,
+    CLKSRC_GPIN0 = 0x02,
+    _RESERVED_3 = 0x03,
+}
+impl DftclkXoscCtrlSrc {
+    #[inline(always)]
+    pub const fn from_bits(val: u8) -> DftclkXoscCtrlSrc {
+        unsafe { core::mem::transmute(val & 0x03) }
+    }
+    #[inline(always)]
+    pub const fn to_bits(self) -> u8 {
+        unsafe { core::mem::transmute(self) }
+    }
+}
+impl From<u8> for DftclkXoscCtrlSrc {
+    #[inline(always)]
+    fn from(val: u8) -> DftclkXoscCtrlSrc {
+        DftclkXoscCtrlSrc::from_bits(val)
+    }
+}
+impl From<DftclkXoscCtrlSrc> for u8 {
+    #[inline(always)]
+    fn from(val: DftclkXoscCtrlSrc) -> u8 {
+        DftclkXoscCtrlSrc::to_bits(val)
+    }
+}
+#[repr(u8)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum Fc0src {
     NULL = 0,
     PLL_SYS_CLKSRC_PRIMARY = 0x01,
@@ -314,10 +404,10 @@ pub enum Fc0src {
     CLK_PERI = 0x0a,
     CLK_USB = 0x0b,
     CLK_ADC = 0x0c,
-    CLK_RTC = 0x0d,
-    _RESERVED_e = 0x0e,
-    _RESERVED_f = 0x0f,
-    _RESERVED_10 = 0x10,
+    CLK_HSTX = 0x0d,
+    LPOSC_CLKSRC = 0x0e,
+    OTP_CLK2FC = 0x0f,
+    PLL_USB_CLKSRC_PRIMARY_DFT = 0x10,
     _RESERVED_11 = 0x11,
     _RESERVED_12 = 0x12,
     _RESERVED_13 = 0x13,

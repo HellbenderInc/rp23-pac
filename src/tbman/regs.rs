@@ -25,6 +25,17 @@ impl Platform {
     pub fn set_fpga(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 1usize)) | (((val as u32) & 0x01) << 1usize);
     }
+    #[doc = "Indicates the platform is a simulation"]
+    #[inline(always)]
+    pub const fn hdlsim(&self) -> bool {
+        let val = (self.0 >> 2usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Indicates the platform is a simulation"]
+    #[inline(always)]
+    pub fn set_hdlsim(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 2usize)) | (((val as u32) & 0x01) << 2usize);
+    }
 }
 impl Default for Platform {
     #[inline(always)]

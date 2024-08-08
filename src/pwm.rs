@@ -57,33 +57,48 @@ impl Pwm {
     }
     #[inline(always)]
     pub const fn ch(self, n: usize) -> Channel {
-        assert!(n < 8usize);
+        assert!(n < 12usize);
         unsafe { Channel::from_ptr(self.ptr.add(0usize + n * 20usize) as _) }
     }
     #[doc = "This register aliases the CSR_EN bits for all channels. Writing to this register allows multiple channels to be enabled or disabled simultaneously, so they can run in perfect sync. For each channel, there is only one physical EN register bit, which can be accessed through here or CHx_CSR."]
     #[inline(always)]
     pub const fn en(self) -> crate::common::Reg<regs::En, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(160usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(240usize) as _) }
     }
     #[doc = "Raw Interrupts"]
     #[inline(always)]
     pub const fn intr(self) -> crate::common::Reg<regs::Intr, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(164usize) as _) }
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(244usize) as _) }
     }
-    #[doc = "Interrupt Enable"]
+    #[doc = "Interrupt Enable for irq0"]
     #[inline(always)]
-    pub const fn inte(self) -> crate::common::Reg<regs::Inte, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(168usize) as _) }
+    pub const fn irq0_inte(self) -> crate::common::Reg<regs::Irq0inte, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(248usize) as _) }
     }
-    #[doc = "Interrupt Force"]
+    #[doc = "Interrupt Force for irq0"]
     #[inline(always)]
-    pub const fn intf(self) -> crate::common::Reg<regs::Intf, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(172usize) as _) }
+    pub const fn irq0_intf(self) -> crate::common::Reg<regs::Irq0intf, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(252usize) as _) }
     }
-    #[doc = "Interrupt status after masking & forcing"]
+    #[doc = "Interrupt status after masking & forcing for irq0"]
     #[inline(always)]
-    pub const fn ints(self) -> crate::common::Reg<regs::Ints, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(176usize) as _) }
+    pub const fn irq0_ints(self) -> crate::common::Reg<regs::Irq0ints, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(256usize) as _) }
+    }
+    #[doc = "Interrupt Enable for irq1"]
+    #[inline(always)]
+    pub const fn irq1_inte(self) -> crate::common::Reg<regs::Irq1inte, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(260usize) as _) }
+    }
+    #[doc = "Interrupt Force for irq1"]
+    #[inline(always)]
+    pub const fn irq1_intf(self) -> crate::common::Reg<regs::Irq1intf, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(264usize) as _) }
+    }
+    #[doc = "Interrupt status after masking & forcing for irq1"]
+    #[inline(always)]
+    pub const fn irq1_ints(self) -> crate::common::Reg<regs::Irq1ints, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(268usize) as _) }
     }
 }
 pub mod regs;

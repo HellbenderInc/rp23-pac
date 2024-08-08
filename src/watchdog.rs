@@ -18,12 +18,12 @@ impl Watchdog {
     pub const fn ctrl(self) -> crate::common::Reg<regs::Ctrl, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(0usize) as _) }
     }
-    #[doc = "Load the watchdog timer. The maximum setting is 0xffffff which corresponds to 0xffffff / 2 ticks before triggering a watchdog reset (see errata RP2040-E1)."]
+    #[doc = "Load the watchdog timer. The maximum setting is 0xffffff which corresponds to approximately 16 seconds."]
     #[inline(always)]
     pub const fn load(self) -> crate::common::Reg<regs::Load, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(4usize) as _) }
     }
-    #[doc = "Logs the reason for the last reset. Both bits are zero for the case of a hardware reset."]
+    #[doc = "Logs the reason for the last reset. Both bits are zero for the case of a hardware reset. Additionally, as of RP2350, a debugger warm reset of either core (SYSRESETREQ or hartreset) will also clear the watchdog reason register, so that software loaded under the debugger following a watchdog timeout will not continue to see the timeout condition."]
     #[inline(always)]
     pub const fn reason(self) -> crate::common::Reg<regs::Reason, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(8usize) as _) }
@@ -67,11 +67,6 @@ impl Watchdog {
     #[inline(always)]
     pub const fn scratch7(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(40usize) as _) }
-    }
-    #[doc = "Controls the tick generator"]
-    #[inline(always)]
-    pub const fn tick(self) -> crate::common::Reg<regs::Tick, crate::common::RW> {
-        unsafe { crate::common::Reg::from_ptr(self.ptr.add(44usize) as _) }
     }
 }
 pub mod regs;

@@ -1,4 +1,3 @@
-#[doc = "Pad control register"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct GpioCtrl(pub u32);
@@ -79,6 +78,17 @@ impl GpioCtrl {
     #[inline(always)]
     pub fn set_od(&mut self, val: bool) {
         self.0 = (self.0 & !(0x01 << 7usize)) | (((val as u32) & 0x01) << 7usize);
+    }
+    #[doc = "Pad isolation control. Remove this once the pad is configured by software."]
+    #[inline(always)]
+    pub const fn iso(&self) -> bool {
+        let val = (self.0 >> 8usize) & 0x01;
+        val != 0
+    }
+    #[doc = "Pad isolation control. Remove this once the pad is configured by software."]
+    #[inline(always)]
+    pub fn set_iso(&mut self, val: bool) {
+        self.0 = (self.0 & !(0x01 << 8usize)) | (((val as u32) & 0x01) << 8usize);
     }
 }
 impl Default for GpioCtrl {

@@ -124,6 +124,13 @@ impl Usb {
     pub const fn usbphy_trim(self) -> crate::common::Reg<regs::UsbphyTrim, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(132usize) as _) }
     }
+    #[doc = "Used for debug only."]
+    #[inline(always)]
+    pub const fn linestate_tuning(
+        self,
+    ) -> crate::common::Reg<regs::LinestateTuning, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(136usize) as _) }
+    }
     #[doc = "Raw Interrupts"]
     #[inline(always)]
     pub const fn intr(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
@@ -143,6 +150,41 @@ impl Usb {
     #[inline(always)]
     pub const fn ints(self) -> crate::common::Reg<regs::Int, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(152usize) as _) }
+    }
+    #[doc = "Device only. Raw value of free-running PHY clock counter @48MHz. Used to calculate time between SOF events."]
+    #[inline(always)]
+    pub const fn sof_timestamp_raw(
+        self,
+    ) -> crate::common::Reg<regs::SofTimestampRaw, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(256usize) as _) }
+    }
+    #[doc = "Device only. Value of free-running PHY clock counter @48MHz when last SOF event occurred."]
+    #[inline(always)]
+    pub const fn sof_timestamp_last(
+        self,
+    ) -> crate::common::Reg<regs::SofTimestampLast, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(260usize) as _) }
+    }
+    #[inline(always)]
+    pub const fn sm_state(self) -> crate::common::Reg<regs::SmState, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(264usize) as _) }
+    }
+    #[doc = "TX error count for each endpoint. Write to each field to reset the counter to 0."]
+    #[inline(always)]
+    pub const fn ep_tx_error(self) -> crate::common::Reg<regs::EpTxError, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(268usize) as _) }
+    }
+    #[doc = "RX error count for each endpoint. Write to each field to reset the counter to 0."]
+    #[inline(always)]
+    pub const fn ep_rx_error(self) -> crate::common::Reg<regs::EpRxError, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(272usize) as _) }
+    }
+    #[doc = "Watchdog that forces the device state machine to idle and raises an interrupt if the device stays in a state that isn't idle for the configured limit. The counter is reset on every state transition. Set limit while enable is low and then set the enable."]
+    #[inline(always)]
+    pub const fn dev_sm_watchdog(
+        self,
+    ) -> crate::common::Reg<regs::DevSmWatchdog, crate::common::RW> {
+        unsafe { crate::common::Reg::from_ptr(self.ptr.add(276usize) as _) }
     }
 }
 pub mod regs;
