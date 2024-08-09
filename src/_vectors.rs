@@ -43,6 +43,12 @@ extern "C" {
     fn PLL_USB_IRQ();
     fn POWMAN_IRQ_POW();
     fn POWMAN_IRQ_TIMER();
+    fn SWI_IRQ_0();
+    fn SWI_IRQ_1();
+    fn SWI_IRQ_2();
+    fn SWI_IRQ_3();
+    fn SWI_IRQ_4();
+    fn SWI_IRQ_5();
 }
 pub union Vector {
     _handler: unsafe extern "C" fn(),
@@ -50,7 +56,7 @@ pub union Vector {
 }
 #[link_section = ".vector_table.interrupts"]
 #[no_mangle]
-pub static __INTERRUPTS: [Vector; 46] = [
+pub static __INTERRUPTS: [Vector; 53] = [
     Vector {
         _handler: TIMER0_IRQ_0,
     },
@@ -172,5 +178,24 @@ pub static __INTERRUPTS: [Vector; 46] = [
     },
     Vector {
         _handler: POWMAN_IRQ_TIMER,
+    },
+    Vector { _reserved: 0 },
+    Vector {
+        _handler: SWI_IRQ_0,
+    },
+    Vector {
+        _handler: SWI_IRQ_1,
+    },
+    Vector {
+        _handler: SWI_IRQ_2,
+    },
+    Vector {
+        _handler: SWI_IRQ_3,
+    },
+    Vector {
+        _handler: SWI_IRQ_4,
+    },
+    Vector {
+        _handler: SWI_IRQ_5,
     },
 ];

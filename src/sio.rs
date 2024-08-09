@@ -44,22 +44,22 @@ impl Gpio {
     pub const fn as_ptr(&self) -> *mut () {
         self.ptr as _
     }
-    #[doc = "GPIO0...31 output enable"]
+    #[doc = "Output enable value for GPIO32...47, QSPI IOs and USB pins. Write output enable (1/0 -> output/input). Reading back gives the last value written. If core 0 and core 1 both write to GPIO_HI_OE simultaneously (or to a SET/CLR/XOR alias), the result is as though the write from core 0 took place first, and the write from core 1 was then applied to that intermediate result. In the Non-secure SIO, Secure-only GPIOs (as per ACCESSCTRL) ignore writes, and their output status reads back as zero. This is also true for SET/CLR/XOR aliases of this register."]
     #[inline(always)]
     pub const fn value(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(0usize) as _) }
     }
-    #[doc = "GPIO0...31 output enable set"]
+    #[doc = "Output enable set for GPIO32...47, QSPI IOs and USB pins. Perform an atomic bit-set on GPIO_HI_OE, i.e. `GPIO_HI_OE |= wdata`"]
     #[inline(always)]
     pub const fn value_set(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(8usize) as _) }
     }
-    #[doc = "GPIO0...31 output enable clear"]
+    #[doc = "Output enable clear for GPIO32...47, QSPI IOs and USB pins. Perform an atomic bit-clear on GPIO_HI_OE, i.e. `GPIO_HI_OE &= ~wdata`"]
     #[inline(always)]
     pub const fn value_clr(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(16usize) as _) }
     }
-    #[doc = "GPIO0...31 output enable XOR"]
+    #[doc = "Output enable XOR for GPIO32...47, QSPI IOs and USB pins. Perform an atomic bitwise XOR on GPIO_HI_OE, i.e. `GPIO_HI_OE ^= wdata`"]
     #[inline(always)]
     pub const fn value_xor(self) -> crate::common::Reg<u32, crate::common::RW> {
         unsafe { crate::common::Reg::from_ptr(self.ptr.add(24usize) as _) }

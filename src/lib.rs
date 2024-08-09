@@ -91,6 +91,18 @@ pub enum Interrupt {
     POWMAN_IRQ_POW = 44,
     #[doc = "45 - POWMAN_IRQ_TIMER"]
     POWMAN_IRQ_TIMER = 45,
+    #[doc = "47 - SWI_IRQ_0"]
+    SWI_IRQ_0 = 47,
+    #[doc = "48 - SWI_IRQ_1"]
+    SWI_IRQ_1 = 48,
+    #[doc = "49 - SWI_IRQ_2"]
+    SWI_IRQ_2 = 49,
+    #[doc = "50 - SWI_IRQ_3"]
+    SWI_IRQ_3 = 50,
+    #[doc = "51 - SWI_IRQ_4"]
+    SWI_IRQ_4 = 51,
+    #[doc = "52 - SWI_IRQ_5"]
+    SWI_IRQ_5 = 52,
 }
 unsafe impl cortex_m::interrupt::InterruptNumber for Interrupt {
     #[inline(always)]

@@ -1835,7 +1835,7 @@ impl Default for Fc0status {
         Fc0status(0)
     }
 }
-#[doc = "Raw Interrupts"]
+#[doc = "Interrupt Enable"]
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq)]
 pub struct Int(pub u32);
